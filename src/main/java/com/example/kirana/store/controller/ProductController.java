@@ -5,6 +5,8 @@ import com.example.kirana.store.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -20,9 +22,9 @@ public class ProductController {
         return ResponseEntity.ok(productService.getAllProducts());
     }
 
-//    @PostMapping("/addProduct")
-//    public ResponseEntity<Product> addProduct(@RequestBody Product product){
-//        return ResponseEntity.ok(productService.addProduct());
-//    }
+    @PostMapping("/addProduct")
+    public ResponseEntity<Product> addProduct(@RequestBody Product product){
+        return ResponseEntity.ok(productService.addProduct(product));
+    }
 
 }
