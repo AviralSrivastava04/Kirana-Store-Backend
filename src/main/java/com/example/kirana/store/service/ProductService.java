@@ -39,4 +39,11 @@ public class ProductService {
 
         productRepo.delete(existingProduct);
     }
+
+    public Product getProductById(Long id) {
+        Product productById = productRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product Not Found!!!"));
+
+        return productById;
+    }
 }
