@@ -1,5 +1,7 @@
 package com.example.kirana.store.controller;
 
+import com.example.kirana.store.dto.inputDto.ProductInputDto;
+import com.example.kirana.store.dto.outputDto.ProductOutputDto;
 import com.example.kirana.store.entity.Product;
 import com.example.kirana.store.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,23 +17,23 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping("/getProducts")
-    public ResponseEntity<List<Product>> getAllProducts(){
+    public ResponseEntity<List<ProductOutputDto>> getAllProducts(){
         return ResponseEntity.ok(productService.getAllProducts());
     }
 
     @GetMapping("/getProduct/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id){
+    public ResponseEntity<ProductOutputDto> getProductById(@PathVariable Long id){
         return ResponseEntity.ok(productService.getProductById(id));
     }
 
     @PostMapping("/addProduct")
-    public ResponseEntity<Product> addProduct(@RequestBody Product product){
-        return ResponseEntity.ok(productService.addProduct(product));
+    public ResponseEntity<String> addProduct(@RequestBody ProductInputDto productInputDto){
+        return ResponseEntity.ok(productService.addProduct(productInputDto));
     }
 
     @PutMapping("/updateProduct/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product product){
-        return ResponseEntity.ok(productService.updateProduct(id, product));
+    public ResponseEntity<ProductInputDto> updateProduct(@PathVariable Long id, @RequestBody ProductInputDto productInputDto){
+        return ResponseEntity.ok(productService.updateProduct(id, productInputDto));
     }
 
     @DeleteMapping("/deleteProduct/{id}")

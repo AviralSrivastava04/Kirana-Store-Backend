@@ -1,12 +1,14 @@
 package com.example.kirana.store.service;
 
+import com.example.kirana.store.dto.inputDto.ProductInputDto;
+import com.example.kirana.store.dto.outputDto.ProductOutputDto;
 import com.example.kirana.store.entity.Product;
 import com.example.kirana.store.repository.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -14,23 +16,39 @@ public class ProductService {
     @Autowired
     private ProductRepo productRepo;
 
-    public List<Product> getAllProducts(){
-        return productRepo.findAll();
+    public List<ProductOutputDto> getAllProducts(){
+        List<Product> products = productRepo.findAll();
+        List<ProductOutputDto> productOutputDtoList = new ArrayList<>();
+        for (Product product : products){
+            ProductOutputDto productOutputDto = new ProductOutputDto();
+            productOutputDto.setProductName(product.getProductName());
+            productOutputDto.setProductPrice(product.getProductPrice());
+            productOutputDto.setProductDescription(product.getProductDescription());
+            productOutputDto.setId(product.getId());
+            productOutputDtoList.add(productOutputDto);
+        }
+        return productOutputDtoList;
     }
 
-    public Product addProduct(Product product) {
-        return productRepo.save(product);
+    public String addProduct(ProductInputDto productInputDto) {
+        Product product = new Product();
+        product.setProductName(productInputDto.getProductName());
+        product.setProductPrice(productInputDto.getProductPrice());
+        product.setProductDescription(productInputDto.getProductDescription());
+        productRepo.save(product);
+
+        return "Product Added!!!";
     }
 
-    public Product updateProduct(Long id, Product product) {
-        Product existingProduct = productRepo.findById(id)
+    public ProductInputDto updateProduct(Long id, ProductInputDto productInputDto) {
+        Product product = productRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product Not Found!!!"));
+        product.setProductName(productInputDto.getProductName());
+        product.setProductPrice(productInputDto.getProductPrice());
+        product.setProductDescription(productInputDto.getProductDescription());
+        productRepo.save(product);
 
-        existingProduct.setProductName(product.getProductName());
-        existingProduct.setProductDescription(product.getProductDescription());
-        existingProduct.setProductPrice(product.getProductPrice());
-
-        return productRepo.save(existingProduct);
+        return productInputDto;
     }
 
     public void deleteProduct(Long id) {
@@ -40,10 +58,17 @@ public class ProductService {
         productRepo.delete(existingProduct);
     }
 
-    public Product getProductById(Long id) {
-        Product productById = productRepo.findById(id)
+    public ProductOutputDto getProductById(Long id) {
+        Product product = productRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product Not Found!!!"));
 
-        return productById;
+
+        ProductOutputDto productOutputDto = new ProductOutputDto();
+        productOutputDto.setId(product.getId());
+        productOutputDto.setProductPrice(product.getProductPrice());
+        productOutputDto.setProductName(product.getProductName());
+        productOutputDto.setProductDescription(product.getProductDescription());
+
+        return productOutputDto;
     }
 }
